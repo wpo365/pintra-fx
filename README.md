@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pintra is short for a WordPress + Office 365 intranet that is built using our (partially open source) Framework **Pintra-Fx**. This framework offers a runtime model across multiple technology layers, to help developers build client-side Office 365 productive intranet experiences and apps to meet the advanced requirements of today's modern workplace.
+Pintra is short for a WordPress + Office 365 intranet that is built using our (partially open source) Framework **Pintra-Fx**. This framework offers a runtime model across multiple technology layers, to help developers build client-side Office 365 productive intranet experiences and apps for WordPress that meet the advanced requirements of today's modern workplace.
 
 Because **Pintra-Fx** is rooted in WordPress, it differs greatly from the [SharePoint Framework](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/sharepoint-framework-overview). However, it also offers many similar key features, including the following:
 
@@ -55,7 +55,7 @@ Please visit our [website](https://www.wpo365.com/) to find out more about the p
 **Pintra** client-side solutions are injected into any WordPress page or post using a **[WordPress shortcode](https://codex.wordpress.org/shortcode)**, e.g.:
 
 ```php
-[pintra props="resourceId,https://wpo365demo.sharepoint.com" script_url="https://pintra-sample-app.azureedge.net/"]
+[pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net/dist.js"]
 ```
 
 The WordPress shortcode basically is a macro that can be used in any WordPress page or post. The _[pintra]_ shortcode takes two parameters:
@@ -63,7 +63,7 @@ The WordPress shortcode basically is a macro that can be used in any WordPress p
 | **Parameter** | **Usage**                                                                                                                  |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | props         | [Optional] Comma separated key / value pairs (concatenated by a semicolon) that are injected into the client-side solution |
-| script_url    | URI that points to a script that contains your client-side solution                                                        |
+| script_url    | URL that points to a script that contains your client-side solution                                                        |
 
 When a WordPress page or post is being rendered, the shortcode macro injects the following HTML into the page (and replaces the PHP \$tags with relevant data e.g. with values from the shortcode's parameters):
 
@@ -98,7 +98,7 @@ For the shortcode to be able to pass data to the client-side solution, HTML5 dat
 import React = require('react')
 import ReactDOM = require('react-dom')
 
-import { PintraSampleApp } from './components/PintraSampleApp'
+import { RecentDocuments } from './components/RecentDocuments'
 
 import {
   IReactDomConfig,
@@ -108,7 +108,7 @@ import {
 const reactDomConfig: IReactDomConfig = AppLauncher.getReactDomConfig()
 
 ReactDOM.render(
-  <PintraSampleApp env={reactDomConfig.env} />,
+  <RecentDocuments env={reactDomConfig.env} />,
   document.getElementById(reactDomConfig.rootId)
 )
 ```
@@ -138,7 +138,7 @@ Especially worth mentioning is the shortcode's _props_ parameter that is convert
 {
   nonce: '000c119b56';
   props: {
-    resourceId: 'https://wpo365demo.sharepoint.com';
+    resourceId: 'https://graph.microsoft.com';
   }
   wpAjaxAdminUrl: 'http://www.example.com/wp-admin/admin-ajax.php';
 }
@@ -157,14 +157,14 @@ The _TokenCache_ class offers a simple API to developers of client-side solution
 public render(): React.ReactElement<IPintraSampleAppProps> {
   return (
     <div>
-      <button onClick={this._click}>Get SharePoint Token</button>
+      <button onClick={this.click}>Get Microsoft Graph Token</button>
     </div>
   )
 }
 
-private _click = () => {
+private click = () => {
   TokenCache.getToken(
-    new TokenRequest('sharepoint', this.props.env.props.resourceId),
+    new TokenRequest('graph', this.props.env.props.resourceId),
     {
       nonce: this.props.env.nonce,
       wpAjaxAdminUrl: this.props.env.wpAjaxAdminUrl,
@@ -196,20 +196,82 @@ In case the API cannot produce a valid token it will return a TokenRequestError 
 
 ### Build your first Microsoft Graph client-side app using the Pintra Framework
 
-#### 1. Create a new project directory in your favorite location
+#### 1. Navigate to your favorite projects directory
 
 ```cmd
-md used-documents-app
+cd projects
 ```
 
-#### 2. Go to the project directory
+#### 2. Clone our Recent Documents project
 
 ```cmd
-cd used-documents-app
+git clone https://github.com/wpo365/pintra-fx-examples.git
 ```
 
+Alternatively you can manually create a folder in your projects directory, navigate to the [github repository](https://github.com/wpo365/pintra-fx-examples) and download the app instead.
 
+#### 3. Install dependencies
 
-#### 99. Deploy your solution
+Now change into the project directory and run **npm install**.
 
-You don't even need to install your client-side solution on your WordPress server but instead can deploy it for example to Azure blog storage or any (secure) CDN. A Universal App only needs to know from where to download your client-side solution and this client-side solution must include the [WPO365Fx JavaScript library](https://github.com/wpo365/wpo365-fxlib) that provides a simple but robust API to request access tokens for Office 365 services e.g. SharePoint Online or Microsoft Graph. To simplify your development you can add this library to your own project in the form of an [NPM package](https://www.npmjs.com/package/wpo365-fxlib).
+```cmd
+cd pintra-fx-examples
+npm install
+```
+
+This will download all the missing packages into the **node_modules** folder, based on the dependencies listed in the **package.json** file that you can find in the root of the project folder.
+
+One of the dependencies is **[pintra-fx](https://www.npmjs.com/package/pintra-fx)**. This is our JavaScript API that provides developers with a number of methods to get access tokens for Azure AD secured resources e.g. SharePoint Online and Microsoft Graph by calling the AJAX webservice offered by our [WordPress + Office 365 authentication plugin(s)](https://www.wpo365.com/).
+
+For your own projects you can include this library using **npm** as follows:
+
+```cmd
+npm install pintra-fx --save
+```
+
+#### 4. Build the project
+
+The project is built by running webpack.
+
+```cmd
+webpack
+```
+
+This will create the production optimized javascript files dist.js and dist.map.js in the dist folder in the root of the project.
+
+#### 5. Deploy your solution
+
+Now you need to deploy and test the app. To do so you can place the files anywhere where they can be retrieved by your users. Do you remember the WordPress shortcode that was discussed previously? Let's look at this again...
+
+```php
+[pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net/dist.js"]
+```
+
+The shortcode expects a parameter that is a routable URL that points to the file. In this example the file has been uploaded to an Azure Blob Storage. For production you can consider creating a CDN endpoint for it.
+
+_For development purposes you maybe need to improvise a little bit. Most likely you can simply xcopy the files from the project's dist folder to a virtual directory on your development webserver. An example of how to automate this can be found in the package.json file's **scripts** property (running **npm run build** will first run webpack and then xcopy the files from one to the other location._
+
+The fact that deployment of the app and its files is fully separated from your WordPress allows a decoupled and automated integration and deployment scenario and it does not require you to install a new plugin for each new app.
+
+#### 6. Configure the shortcode
+
+The WordPress shortcode is available when you have installed one of our [WordPress + Office 365 authentication plugins]([WordPress + Office 365 authentication plugin(s)](https://www.wpo365.com/)). Simply add it to a page or post and configure the necessary parameter:
+
+```php
+[pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net"]
+```
+
+Please note that the props parameter is optional and that the required configuration will be different for each **Pintra Framework** app. What ever is configured as a shortcode parameter, can be read by the app and may be used when the app executes. Sometimes the app needs runtime settings that are unknown during development. For example, if your app needs to get an access token for SharePoint Online then you need to pass in the so-called resource ID. Since the resource ID for SharePoint Online is different for each tenant, it must be injected in the app - at least when you would like to distribute your app to multiple customers or if you have multiple tenants e.g. one for development, one for testing and one for production.
+
+### Final thoughts
+
+With the **Pintra Framework** you can start writing intranet and apps for WordPress + Office 365 within minutes and I hope that this guide, the open source technologies provided and the sample app have helped you gain an understanding of how to achieve this.
+
+I realize that the Pintra Framework approach differs greatly from writing Office 365 apps for SharePoint using the SPFx framework - the official addin framework for SharePoint that - even though it's a fantastic effort from many great people - has become rather complicated.
+
+### Change log
+
+| Version | Date       | Description                                                     |
+|---------|------------|-----------------------------------------------------------------|
+| 0.1.1   | 16.11.2018 | Fix: README updated                                             |
+| 0.1.0   | 15.11.2018 | Initial version                                                 |
