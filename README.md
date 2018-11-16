@@ -55,7 +55,7 @@ Please visit our [website](https://www.wpo365.com/) to find out more about the p
 **Pintra** client-side solutions are injected into any WordPress page or post using a **[WordPress shortcode](https://codex.wordpress.org/shortcode)**, e.g.:
 
 ```php
-[pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net/dist.js"]
+[pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net/recentdocuments/dist.js"]
 ```
 
 The WordPress shortcode basically is a macro that can be used in any WordPress page or post. The _[pintra]_ shortcode takes two parameters:
@@ -244,7 +244,7 @@ This will create the production optimized javascript files dist.js and dist.map.
 Now you need to deploy and test the app. To do so you can place the files anywhere where they can be retrieved by your users. Do you remember the WordPress shortcode that was discussed previously? Let's look at this again...
 
 ```php
-[pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net/dist.js"]
+[pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net/recentdocuments/dist.js"]
 ```
 
 The shortcode expects a parameter that is a routable URL that points to the file. In this example the file has been uploaded to an Azure Blob Storage. For production you can consider creating a CDN endpoint for it.
@@ -273,5 +273,6 @@ I realize that the Pintra Framework approach differs greatly from writing Office
 
 | Version | Date       | Description                                                     |
 |---------|------------|-----------------------------------------------------------------|
+| 0.1.2   | 16.11.2018 | Fix: README updated                                             |
 | 0.1.1   | 16.11.2018 | Fix: README updated                                             |
 | 0.1.0   | 15.11.2018 | Initial version                                                 |
