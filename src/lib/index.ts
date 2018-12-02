@@ -4,6 +4,7 @@ import {
   ITokenResponse,
   ITokenRequestOptions,
   TokenRequest,
+  TokenRequestV2,
   TokenRequestError
 } from './TokenCache';
 
@@ -15,6 +16,7 @@ export {
   ITokenRequestOptions,
   TokenCache,
   TokenRequest,
+  TokenRequestV2,
   TokenRequestError,
   AppLauncher
 };
