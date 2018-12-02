@@ -2,10 +2,19 @@
   "compilerOptions": {
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "commonjs",
+    "module": "esnext",
+    "moduleResolution": "node",
     "target": "es5",
     "jsx": "react",
-    "declaration": true
+    "declaration": true,
+    "lib": [
+      "es5",
+      "dom",
+      "es2015.collection",
+      "es2015.promise"
+    ]
   },
-  "include": ["./src/**/*"]
+  "include": [
+    "./src/**/*"
+  ]
 }
