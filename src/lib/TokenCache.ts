@@ -2,7 +2,7 @@
  * @overview  Pintra is what we call a WordPress + Office 365 intranet that is built using the partially open-source Framework Pintra-Fx. This framework offers a runtime model across multiple technology layers, to help developers build client-side Office 365 productive intranet experiences and apps to meet the advanced requirements of today's modern workplace.
  * @copyright Copyright (c) 2018 Marco van Wieren
  * @license   Licensed under MIT license
- * @version   v0.2.1
+ * @version   v0.3.0
  */
 
 import Axios from 'axios';
@@ -16,6 +16,16 @@ export class TokenCache {
     if (tokenCache) {
       TokenCache.tokens = JSON.parse(tokenCache);
     }
+  }
+
+  /**
+   * Clear the locally stored token cache.
+   * 
+   * @returns void
+   */
+  public static clearTokenCache(): void {
+    localStorage.removeItem('pintraTokenCache');
+    TokenCache.tokens = [];
   }
 
   /**

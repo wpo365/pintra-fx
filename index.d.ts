@@ -10,6 +10,12 @@ export interface IReactDomConfig {
 
 export class TokenCache {
         /**
+            * Clear the locally stored token cache.
+            *
+            * @returns void
+            */
+        static clearTokenCache(): void;
+        /**
             *
             * @param request TokenRequest          The TokenRequest object
             * @param options ITokenRequestOptions  Optional ITokenRequestOptions
