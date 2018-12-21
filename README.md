@@ -304,8 +304,9 @@ I realize that the Pintra Framework approach differs greatly from writing Office
 
 | Version | Date       | Description                                                     |
 |---------|------------|-----------------------------------------------------------------|
+| 0.2.1   | 21.12.2018 | Fix: TokenRequestError is now correctly created as custom error |
 | 0.2.0   | 02.12.2018 | Change: TokenCache.getToken now returns a promise               |
-|         |            | Change: Support for AAD v2.0   |
+|         |            | Change: Support for AAD v2.0                                    |
 | 0.1.2   | 16.11.2018 | Fix: README updated                                             |
 | 0.1.1   | 16.11.2018 | Fix: README updated                                             |
 | 0.1.0   | 15.11.2018 | Initial version                                                 |
