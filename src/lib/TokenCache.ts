@@ -2,7 +2,7 @@
  * @overview  Pintra is what we call a WordPress + Office 365 intranet that is built using the partially open-source Framework Pintra-Fx. This framework offers a runtime model across multiple technology layers, to help developers build client-side Office 365 productive intranet experiences and apps to meet the advanced requirements of today's modern workplace.
  * @copyright Copyright (c) 2018 Marco van Wieren
  * @license   Licensed under MIT license
- * @version   v0.2.0
+ * @version   v0.2.1
  */
 
 import Axios from 'axios';
@@ -52,7 +52,7 @@ export class TokenCache {
       response = await Axios.post(options.wpAjaxAdminUrl, data);
     }
     catch (error) {
-      const axiosError = new TokenRequestError();
+      const axiosError = new TokenRequestError(error.message);
       axiosError.data = {
         status: 'NOK',
         error_codes: '-1',
@@ -85,14 +85,13 @@ export class TokenCache {
         return token;
       }
       else {
-        const responseError = new TokenRequestError();
-        if (response && response.data)
-          responseError.data = response.data;
+        const responseError = new TokenRequestError(response.data.message);
+        responseError.data = response.data;
         return responseError;
       }
     }
 
-    const error = new TokenRequestError();
+    const error = new TokenRequestError('Response status: ' + response.status);
     error.data = {
       status: 'NOK',
       error_codes: '-1',
@@ -137,7 +136,7 @@ export class TokenCache {
       response = await Axios.post(options.wpAjaxAdminUrl, data);
     }
     catch (error) {
-      const axiosError = new TokenRequestError();
+      const axiosError = new TokenRequestError(error.message);
       axiosError.data = {
         status: 'NOK',
         error_codes: '-1',
@@ -170,14 +169,13 @@ export class TokenCache {
         return token;
       }
       else {
-        const responseError = new TokenRequestError();
-        if (response && response.data)
-          responseError.data = response.data;
+        const responseError = new TokenRequestError(response.data.message);
+        responseError.data = response.data;
         return responseError;
       }
     }
 
-    const error = new TokenRequestError();
+    const error = new TokenRequestError('Response status: ' + response.status);
     error.data = {
       status: 'NOK',
       error_codes: '-1',
@@ -201,7 +199,11 @@ export interface IToken {
 }
 
 export class TokenRequestError extends Error {
-  data: ITokenResponse;
+  public data: ITokenResponse;
+  constructor(message: string) {
+    super(message);
+    (<any>Object).setPrototypeOf(this, TokenRequestError.prototype);
+  }
 }
 
 export interface ITokenResponse {

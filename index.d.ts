@@ -33,6 +33,7 @@ export interface IToken {
 }
 export class TokenRequestError extends Error {
         data: ITokenResponse;
+        constructor(message: string);
 }
 export interface ITokenResponse {
         status: string;
