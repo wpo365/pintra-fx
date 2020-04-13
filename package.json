@@ -1,7 +1,7 @@
 {
   "name": "pintra-fx",
   "sideEffects": false,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Pintra is what I call a WordPress + Office 365 intranet that is built using the partially open-source Framework Pintra-Fx. This framework offers a runtime model across multiple technology layers, to help developers build client-side Office 365 productive intranet experiences and apps to meet the advanced requirements of today's modern workplace.",
   "main": "index.js",
   "typings": "./index.d.ts",
@@ -28,7 +28,7 @@
     "dts-bundle": "^0.7.3",
     "source-map-loader": "^0.2.3",
     "typescript": "^2.9.2",
-    "webpack": "^4.16.1",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.1.2"
   }
 }

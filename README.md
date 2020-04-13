@@ -304,6 +304,7 @@ I realize that the Pintra Framework approach differs greatly from writing Office
 
 | Version | Date       | Description                                                     |
 |---------|------------|-----------------------------------------------------------------|
+| 0.5.0   | 13.04.2020 | Change: Added scriptContextUrl and fixed vulnerabilities        |
 | 0.4.0   | 03.11.2019 | Change: Added scriptContextUrl and fixed vulnerabilities        |
 | 0.3.2   | 01.06.2019 | Fix: Updated axios due to a vunerability report                 |
 | 0.3.1   | 01.06.2019 | Fix: Updated axios due to a vunerability report                 |
