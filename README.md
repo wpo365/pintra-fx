@@ -13,15 +13,15 @@ Because **Pintra-Fx** is rooted in WordPress, it differs greatly from the [Share
 - It runs in the context of the current user and connection in the browser. There are no iframes for the customization (JavaScript is embedded directly to the page).
 - The controls are rendered in the normal page DOM.
 - It is framework-agnostic (but in fairness it is biased towards React at the moment).
-- The toolchain is based on common open source client development tools such as npm, TypeScript and webpack.
+- The toolchain is based on common open sources client development tools such as npm, TypeScript, and webpack.
 - Performance is reliable.
-- Authors can use their (Pintra-Fx) client-side solutions on all (WordPress) pages and post.
+- Authors can use their (Pintra-Fx) client-side solutions on all (WordPress) pages and posts.
 
 The runtime model uses a standardized WordPress shortcode to inject a client-side JavaScript solution into any WordPress page or post. The shortcode merely acts as a wrapper for this solution and is easy to configure. Think of this shortcode as SharePoint's Script Editor WebPart that was used to inject custom JavaScript into a SharePoint page.
 
-To develop your own client-solution, the runtime model includes a very simple but robust client-side API (available as [NPM package](https://www.npmjs.com/package/pintra-fx)) to get access tokens for Office 365 services e.g. SharePoint Online and Microsoft Graph and store them in the browser's local storage until expired. When expired, the API will use the server-side stored refresh token to get a fresh new access token.
+To develop your client-solution, the runtime model includes a very simple but robust client-side API (available as [NPM package](https://www.npmjs.com/package/pintra-fx)) to get access tokens for Office 365 services e.g. SharePoint Online and Microsoft Graph and store them in the browser's local storage until expired. When expired, the API will use the server-side stored refresh token to get a fresh new access token.
 
-To be able to request access tokens, the runtime expects that WordPress authentication has been delegated to Microsoft's Azure AD and that you have one of the following plugins installed, activated and configured:
+To be able to request access tokens, the runtime expects that WordPress authentication has been delegated to Microsoft's Azure AD and that you have one of the following plugins installed, activated, and configured:
 
 [WordPress + Office 365 Login](https://wordpress.org/plugins/wpo365-login/) plugin ([Premium version available](https://www.wpo365.com/downloads/wordpress-office-365-login-premium/)). It is also this plugin that provides the server-side AJAX server used by the client-side API and the shortcode used to inject your **Pintra** client-side solution into a page.
 
@@ -37,7 +37,7 @@ Go to our [Support Page](https://www.wpo365.com/how-to-get-support/) to get in t
 
 The runtime model relies on users signing into your WordPress website with Microsoft. This way the runtime can ensure that the user has an active session that can be leveraged to request access tokens for Office 365 e.g. SharePoint Online and Microsoft Graph, on behalf of the user.
 
-This does mean that the runtime model expects one of the following plugins to be installed, actived and properly configured:
+This does mean that the runtime model expects one of the following plugins to be installed, activated, and properly configured:
 
 - [WordPress + Office 365 Login (personal use)](https://wordpress.org/plugins/wpo365-login/) plugin
 - [WordPress + Office 365 Login (premium)](https://www.wpo365.com/downloads/wordpress-office-365-login-premium/)
@@ -58,11 +58,11 @@ Please visit our [website](https://www.wpo365.com/) to find out more about the p
 [pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net/recentdocuments/dist.js"]
 ```
 
-The WordPress shortcode basically is a macro that can be used in any WordPress page or post. The _[pintra]_ shortcode takes two parameters:
+The WordPress shortcode is a macro that can be used in any WordPress page or post. The _[pintra]_ shortcode takes two parameters:
 
 | **Parameter** | **Usage**                                                                                                                  |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| props         | [Optional] Comma separated key / value pairs (concatenated by a semicolon) that are injected into the client-side solution |
+| props         | [Optional] Comma separated key/value pairs (concatenated by a semicolon) that are injected into the client-side solution |
 | script_url    | URL that points to a script that contains your client-side solution                                                        |
 
 When a WordPress page or post is being rendered, the shortcode macro injects the following HTML into the page (and replaces the PHP \$tags with relevant data e.g. with values from the shortcode's parameters):
@@ -90,9 +90,9 @@ When a WordPress page or post is being rendered, the shortcode macro injects the
 
 ### 2. Pintra API - AppLauncher
 
-You can see from the previous code snippet that first _react@16_ and _react-dom@16_ is injected into the page and then the custom client-side solution is being loaded from the _script_url_ shortcode's parameter. This way a WordPress page or post author can use the shortcode to insert any client-side app into the page or post; no special knowledge required!
+You can see from the previous code snippet that first _react@16_ and _react-dom@16_ are injected into the page and then the custom client-side solution is being loaded from the _script_url_ shortcode's parameter. This way a WordPress page or post author can use the shortcode to insert any client-side app into the page or post; no special knowledge is required!
 
-For the shortcode to be able to pass data to the client-side solution, HTML5 data attributes are used. When you keep reading, you'll find a bit further down that the **Pintra** API's **AppLauncher** class offers an helper method _getReactDomConfig_ that will read those attributes and make them available to the client-side solution when it initializes, as follows:
+For the shortcode to be able to pass data to the client-side solution, HTML5 data attributes are used. When you keep reading, you'll find a bit further down that the **Pintra** API's **AppLauncher** class offers a helper method _getReactDomConfig_ that will read those attributes and make them available to the client-side solution when it initializes, as follows:
 
 ```javascript
 import React = require('react')
@@ -113,7 +113,7 @@ ReactDOM.render(
 )
 ```
 
-In this example the client-solution renders an ordinary react component called _PintraSampleApp_. However, the client-side solution has no knowledge of the WordPress page or post and therefore does not know what HTML element will be its root element. The **Pintra** API helps with some black magic when calling _AppLauncher.getReactDomConfig()_:
+In this example, the client-solution renders an ordinary react component called _PintraSampleApp_. However, the client-side solution does not know the WordPress page or post and therefore does not know what HTML element will be its root element. The **Pintra** API helps with some black magic when calling _AppLauncher.getReactDomConfig()_:
 
 ```javascript
 /*
@@ -128,11 +128,11 @@ const reactDomConfig: IReactDomConfig = AppLauncher.getReactDomConfig();
 
 Calling _AppLauncher.getReactDomConfig()_ will locate the executing script in the DOM and adds a new DIV element as a child to the parent of that SCRIPT element. It will also assign a random ID to it and return this ID as the _rootId_ property of the object it returns. This way, the same client-side solution can be added to any page or post multiple times, without the problem of multiple DOM elements having the same ID.
 
-Additionally, the me will read the aforementioned attributes from the excuting script's DOM element and return them in the form of the _env_ property.
+Additionally, the me will read the aforementioned attributes from the executing script's DOM element and return them in the form of the _env_ property.
 
-In the current example _PintraSampleApp_ is an ordinary react component that expects one property, namely _env_ (where _env_ is _IReactDomConfig.env_ transparently passed down).
+In the current example, _PintraSampleApp_ is an ordinary react component that expects one property, namely _env_ (where _env_ is _IReactDomConfig.env_ transparently passed down).
 
-Especially worth mentioning is the shortcode's _props_ parameter that is converted to a JSON object by the API. The _props_ parameter can hold settings and configuration data that is very specific to the client-side solution but that may not be available at build time e.g. the resource-id of your SharePoint Online tenant. So in case of the sample app, the _IReactDomConfig.env_ property may look as follows:
+Especially worth mentioning is the shortcode's _props_ parameter that is converted to a JSON object by the API. The _props_ parameter can hold settings and configuration data that is very specific to the client-side solution but that may not be available at build time e.g. the resource-id of your SharePoint Online tenant. So in the case of the sample app, the _IReactDomConfig.env_ property may look as follows:
 
 ```javascript
 {
@@ -146,12 +146,12 @@ Especially worth mentioning is the shortcode's _props_ parameter that is convert
 
 ### 3. Pintra API - TokenCache
 
-The real power of the **Pintra** Framework does not lie in the fact that it helps crossing bridges from WordPress Authoring (shortcode) into WordPress programming (PHP) into the client-side universum (JavaScript). Sure, it's a nice feature and probably it's useful to enable WordPress authors to parameterize client-side solutions as they see fit. However, to build amazing intranet experiences based on Office 365 e.g. SharePoint Online and Microsoft Graph, it's vital that the client-side solution can obtain access tokens on behalf of the current user.
-Obviously there are existing client-side technologies to achieve this e.g. ADAL.JS, but developers with experience in this field will know that end users more often than not are confronted with annoying popup screens for authentication, slowly loading iframes that are injected in the page or specifically in Internet Explorer or Microsoft Edge with security zone issues.
+The real power of the **Pintra** Framework does not lie in the fact that it helps to cross bridges from WordPress Authoring (shortcode) into WordPress programming (PHP) into the client-side Universum (JavaScript). Sure, it's a nice feature and probably it's useful to enable WordPress authors to parameterize client-side solutions as they see fit. However, to build amazing intranet experiences based on Office 365 e.g. SharePoint Online and Microsoft Graph, it's vital that the client-side solution can obtain access tokens on behalf of the current user.
+There are existing client-side technologies to achieve this e.g. ADAL.JS, but developers with experience in this field will know that end-users more often than not are confronted with annoying popup screens for authentication, slowly loading iframes that are injected in the page or specifically in Internet Explorer or Microsoft Edge with security zone issues.
 
-The **Pintra** Framework relies on authentication to Office 365 (Azure AD) being handled by the [WordPress + Office 365 Login](https://wordpress.org/plugins/wpo365-login/) plugin ([Premium version available](https://www.wpo365.com/downloads/wordpress-office-365-login-premium/)). Therefore you must have this plugin installed, activated and successfully configured before you can build your first Office 365 e.g. SharePoint Online or Microsoft Graph client-side app. The plugin will provide a WordPress AJAX service that is consumed by the **Pintra** API's **TokenCache** class.
+The **Pintra** Framework relies on authentication to Office 365 (Azure AD) being handled by the [WordPress + Office 365 Login](https://wordpress.org/plugins/wpo365-login/) plugin ([Premium version available](https://www.wpo365.com/downloads/wordpress-office-365-login-premium/)). Therefore you must have this plugin installed, activated, and successfully configured before you can build your first Office 365 e.g. SharePoint Online or Microsoft Graph client-side app. The plugin will provide a WordPress AJAX service that is consumed by the **Pintra** API's **TokenCache** class.
 
-The _TokenCache_ class offers a simple API to developers of client-side solutions to get access tokens for Office 365 services e.g. SharePoint Online and Microsoft Graph, on behalf of an end users. It will subsequently store those tokens in the browser's local storage until expired. When expired, the API will use the server-side stored refresh token to get a fresh new access token. The following example illustrates this (from [GetTokenButton](https://github.com/wpo365/pintra-fx-examples/tree/master/src/apps/GetTokenButton) example on Github):
+The _TokenCache_ class offers a simple API to developers of client-side solutions to get access tokens for Office 365 services e.g. SharePoint Online and Microsoft Graph, on behalf of end-users. It will subsequently store those tokens in the browser's local storage until expired. When expired, the API will use the server-side stored refresh token to get a fresh new access token. The following example illustrates this (from [GetTokenButton](https://github.com/wpo365/pintra-fx-examples/tree/master/src/apps/GetTokenButton) example on Github):
 
 ```javascript
 import React = require('react')
@@ -235,7 +235,7 @@ cd projects
 git clone https://github.com/wpo365/pintra-fx-examples.git
 ```
 
-Alternatively you can manually create a folder in your projects directory, navigate to the [github repository](https://github.com/wpo365/pintra-fx-examples) and download the app instead.
+Alternatively, you can manually create a folder in your projects directory, navigate to the [github repository](https://github.com/wpo365/pintra-fx-examples), and download the app instead.
 
 #### 3. Install dependencies
 
@@ -248,9 +248,9 @@ npm install
 
 This will download all the missing packages into the **node_modules** folder, based on the dependencies listed in the **package.json** file that you can find in the root of the project folder.
 
-One of the dependencies is **[pintra-fx](https://www.npmjs.com/package/pintra-fx)**. This is our JavaScript API that provides developers with a number of methods to get access tokens for Azure AD secured resources e.g. SharePoint Online and Microsoft Graph by calling the AJAX webservice offered by our [WordPress + Office 365 authentication plugin(s)](https://www.wpo365.com/).
+One of the dependencies is **[pintra-fx](https://www.npmjs.com/package/pintra-fx)**. This is our JavaScript API that provides developers with several methods to get access tokens for Azure AD secured resources e.g. SharePoint Online and Microsoft Graph by calling the AJAX web service offered by our [WordPress + Office 365 authentication plugin(s)](https://www.wpo365.com/).
 
-For your own projects you can include this library using **npm** as follows:
+For your projects you can include this library using **npm** as follows:
 
 ```cmd
 npm install pintra-fx --save
@@ -274,11 +274,11 @@ Now you need to deploy and test the app. To do so you can place the files anywhe
 [pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net/recentdocuments/dist.js"]
 ```
 
-The shortcode expects a parameter that is a routable URL that points to the file. In this example the file has been uploaded to an Azure Blob Storage. For production you can consider creating a CDN endpoint for it.
+The shortcode expects a parameter that is a routable URL that points to the file. In this example, the file has been uploaded to an Azure Blob Storage. For production, you can consider creating a CDN endpoint for it.
 
-_For development purposes you maybe need to improvise a little bit. Most likely you can simply xcopy the files from the project's dist folder to a virtual directory on your development webserver. An example of how to automate this can be found in the package.json file's **scripts** property (running **npm run build** will first run webpack and then xcopy the files from one to the other location._
+_For development purposes you maybe need to improvise a little bit. Most likely you can simply xcopy the files from the project's dist folder to a virtual directory on your development web server. An example of how to automate this can be found in the package.json file's **scripts** property (running **npm run build** will first run webpack and then xcopy the files from one to the other location._
 
-The fact that deployment of the app and its files is fully separated from your WordPress allows a decoupled and automated integration and deployment scenario and it does not require you to install a new plugin for each new app.
+The fact that deployment of the app and its files are fully separated from your WordPress allows a decoupled and automated integration and deployment scenario and it does not require you to install a new plugin for each new app.
 
 #### 6. Configure the shortcode
 
@@ -288,11 +288,11 @@ The WordPress shortcode is available when you have installed one of our [WordPre
 [pintra props="resourceId,https://graph.microsoft.com" script_url="https://pintrafx-examples.azureedge.net"]
 ```
 
-Please note that the props parameter is optional and that the required configuration will be different for each **Pintra Framework** app. What ever is configured as a shortcode parameter, can be read by the app and may be used when the app executes. Sometimes the app needs runtime settings that are unknown during development. For example, if your app needs to get an access token for SharePoint Online then you need to pass in the so-called resource ID. Since the resource ID for SharePoint Online is different for each tenant, it must be injected in the app - at least when you would like to distribute your app to multiple customers or if you have multiple tenants e.g. one for development, one for testing and one for production.
+Please note that the props parameter is optional and that the required configuration will be different for each **Pintra Framework** app. Whatever is configured as a shortcode parameter, can be read by the app and may be used when the app executes. Sometimes the app needs runtime settings that are unknown during development. For example, if your app needs to get an access token for SharePoint Online then you need to pass in the so-called resource ID. Since the resource ID for SharePoint Online is different for each tenant, it must be injected in the app - at least when you would like to distribute your app to multiple customers or if you have multiple tenants e.g. one for development, one for testing, and one for production.
 
 ### Support for Azure AD v2.0 Endpoint
 
-In the last weeks of 2018 support for the Azure AD authorization and token v2.0 endpoints will be added to the WordPress plugin(s). The Pintra Framework has been updated to support this, but the documentation is not yet final. However, if you are interested, then please have a look at the available code online and play around with the new API methods **TokenCache.getTokenV2** that expects an **TokenRequestV2** parameter. The main difference between v1.0 and v2.0 is the fact that each token is requested for a **scope** instead of a **resource**. So rather than providing a resourceId e.g. *https://graph.microsoft.com* you will provide the requested in a v2.0 compatible way e.g. *https://graph.microsoft.com/User.Read*.
+In the last weeks of 2018 support for the Azure AD authorization and token v2.0 endpoints will be added to the WordPress plugin(s). The Pintra Framework has been updated to support this, but the documentation is not yet final. However, if you are interested, then please have a look at the available code online and play around with the new API methods **TokenCache.getTokenV2** that expects a **TokenRequestV2** parameter. The main difference between v1.0 and v2.0 is the fact that each token is requested for a **scope** instead of a **resource**. So rather than providing a resourceId e.g. *https://graph.microsoft.com*, you will provide the requested in a v2.0 compatible way e.g. *https://graph.microsoft.com/User.Read*.
 
 ### Final thoughts
 
