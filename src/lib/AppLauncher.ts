@@ -1,7 +1,19 @@
 export class AppLauncher {
   public static getReactDomConfig(): IReactDomConfig {
     const allScripts = document.getElementsByTagName('script')
-    const currScript = allScripts[allScripts.length - 1]
+    let currScript: HTMLScriptElement = null
+
+    for (let i = allScripts.length - 1; i >= 0; i--) {
+      if (allScripts[i].hasAttribute('data-wpajaxadminurl')) {
+        currScript = allScripts[i]
+        break
+      }
+    }
+
+    if (!currScript) {
+      console.error('[AppLauncher::getReactDomConfig] -> Could not initialize current script')
+      return
+    }
 
     // Determine script context current URL
     const currScriptSrc = currScript.getAttribute('src')
